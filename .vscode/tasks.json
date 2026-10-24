@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Deploy infrastructure",
+            "options": {
+                "cwd": "${workspaceFolder}/infra"
+            },
+            "command": "mise exec -- tofu apply -var-file=envs/${input:environment}.tfvars",
+            "type": "shell",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "FORCE destroy infrastructure local mock",
+            "options": {
+                "cwd": "${workspaceFolder}/infra"
+            },
+            "command": "mise exec -- tofu destroy -var-file=envs/local.tfvars -auto-approve",
+            "type": "shell",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "destroy infrastructure",
+            "options": {
+                "cwd": "${workspaceFolder}/infra"
+            },
+            "command": "mise exec -- tofu destroy -var-file=envs/${input:environment}.tfvars",
+            "type": "shell",
+            "presentation": {
+                "reveal": "always"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "environment",
+            "type": "pickString",
+            "options": [
+                "local",
+                "dev"
+            ],
+            "default": "local",
+            "description": "Enter the environment to deploy the infrastructure"
+        }
+    ]
+}
