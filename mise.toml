@@ -1,4 +1,5 @@
 [tools]
 argocd = "3.5.3"
 aws = { version = "2.38.5", symlink_bins = "true" }
+kubectl = "1.36.4"
 opentofu = "1.13.2"
