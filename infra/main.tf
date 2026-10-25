@@ -10,3 +10,14 @@ module "s3" {
   project       = var.project
   environment   = var.environment
 }
+
+module "eks" {
+  count  = var.enable_eks ? 1 : 0
+  source = "./modules/eks"
+
+  cluster_name       = "${var.project}-${var.environment}"
+  kubernetes_version = var.kubernetes_version
+  aws_region         = var.aws_region
+  project            = var.project
+  environment        = var.environment
+}

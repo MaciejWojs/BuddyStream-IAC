@@ -9,6 +9,10 @@ provider "aws" {
   s3_use_path_style           = var.s3_use_path_style
 
   endpoints {
-    s3 = coalesce(var.aws_s3_endpoint, "https://s3.${var.aws_region}.amazonaws.com")
+    s3  = coalesce(var.aws_s3_endpoint, "https://s3.${var.aws_region}.amazonaws.com")
+    ec2 = coalesce(var.aws_s3_endpoint, "https://ec2.${var.aws_region}.amazonaws.com")
+    eks = coalesce(var.aws_s3_endpoint, "https://eks.${var.aws_region}.amazonaws.com")
+    iam = coalesce(var.aws_s3_endpoint, "https://iam.amazonaws.com")
+    sts = coalesce(var.aws_s3_endpoint, "https://sts.${var.aws_region}.amazonaws.com")
   }
 }

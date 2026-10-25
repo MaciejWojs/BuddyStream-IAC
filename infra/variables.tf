@@ -58,3 +58,15 @@ variable "aws_secret_key" {
   default     = null
   sensitive   = true
 }
+
+variable "enable_eks" {
+  description = "Tworzy klaster EKS. Na local Floci stawia kontener k3s. Wyłączone na prawdziwym AWS."
+  type        = bool
+  default     = false
+}
+
+variable "kubernetes_version" {
+  description = "Wersja Kubernetesa klastra EKS."
+  type        = string
+  default     = "1.31"
+}
