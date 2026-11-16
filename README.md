@@ -113,7 +113,50 @@ UI: [http://localhost:8080](http://localhost:8080). Login to `admin`. Hasło:
 kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-Manifesty aplikacji trzymaj w gicie (katalog `cluster/` jest na to pusty). Argo CD synchronizuje je do klastra. Zmiana obrazu to commit, nie `tofu apply`.
+Manifesty aplikacji trzymaj w gicie (katalog `cluster/`). Argo CD synchronizuje je do klastra. Zmiana obrazu to commit, nie `tofu apply`.
+
+## Sekrety backendu w Vault
+
+Serwer Vault stoi w trybie dev: token roota to `root`, a KV v2 jest pod montowaniem `secret/`. Ten stan jest w pamięci poda `vault-0`. Restart poda albo `tofu destroy` kasuje metodę logowania, politykę i wpisany sekret. Komendy poniżej trzeba wtedy powtórzyć. Binding `vault-token-reviewer` zostaje, dopóki żyje klaster. Przy drugim `kubectl create` wystarczy komunikat, że binding już istnieje. `vault auth enable` przy istniejącej ścieżce `kubernetes` też można zignorować.
+
+Operator czyta `secret/data/backend` rolą `backend`. Rola dopuszcza konto `backend-sa` z namespace `backend` i audience `vault`. Te wartości są w `cluster/backend/backend.yaml`. Bez TokenReview logowanie kończy się 403, operator nie tworzy Secret `backend-secrets`, a Deployment nie startuje.
+
+```bash
+kubectl create clusterrolebinding vault-token-reviewer \
+  --clusterrole=system:auth-delegator \
+  --serviceaccount=vault:vault
+
+kubectl exec -n vault -i vault-0 -- sh -c 'VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=root vault policy write backend -' <<'EOF'
+path "secret/data/backend" {
+  capabilities = ["read"]
+}
+EOF
+
+kubectl exec -n vault vault-0 -- sh -c '
+VAULT_ADDR=http://127.0.0.1:8200
+VAULT_TOKEN=root
+vault auth enable kubernetes
+vault write auth/kubernetes/config \
+  kubernetes_host="https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}" \
+  token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+  kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+vault write auth/kubernetes/role/backend \
+  bound_service_account_names=backend-sa \
+  bound_service_account_namespaces=backend \
+  bound_audiences=vault \
+  policies=backend \
+  ttl=1h
+'
+
+kubectl exec -n vault vault-0 -- env \
+  VAULT_ADDR=http://127.0.0.1:8200 \
+  VAULT_TOKEN=root \
+  vault kv put secret/backend \
+  DATABASE_URL='postgresql://USER:PASSWORD@HOST:5432/buddystream' \
+  ACCESS_TOKEN_SECRET='min-15-znakow'
+```
+
+`DATABASE_URL` i `ACCESS_TOKEN_SECRET` to zmienne, których wymaga proces backendu. Wartości nie commituj. Po zapisie operator odświeża Secret w ciągu `refreshAfter` (30 s) i restartuje Deployment.
 
 ## Destroy
 
