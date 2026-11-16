@@ -10,6 +10,11 @@ spec:
   sources:
     - repoURL: https://github.com/MaciejWojs/BuddyStream-IAC.git
       targetRevision: HEAD
+      path: cluster/argocd/projects
+      directory:
+        recurse: true
+    - repoURL: https://github.com/MaciejWojs/BuddyStream-IAC.git
+      targetRevision: HEAD
       path: cluster/argocd/apps
       directory:
         recurse: true
