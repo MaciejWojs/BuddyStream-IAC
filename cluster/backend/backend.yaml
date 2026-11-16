@@ -22,7 +22,7 @@ spec:
       serviceAccountName: backend-sa
       containers:
         - name: backend
-          image: ghcr.io/maciejwojs/k8s-example-backend:0.0.31
+          image: ghcr.io/maciejwojs/buddy-stream-backend:v0.0.3
           resources:
             requests:
               cpu: "100m"
