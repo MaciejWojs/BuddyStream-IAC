@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: vault
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-30"
+spec:
+  description: Central secrets platform (HashiCorp Vault) shared by all projects
+  sourceRepos:
+    - https://github.com/MaciejWojs/BuddyStream-IAC.git
+    - https://helm.releases.hashicorp.com
+  destinations:
+    - namespace: vault
+      server: https://kubernetes.default.svc
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

@@ -1,18 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: vault-secrets-operator
+  name: vault
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-15"
 spec:
-  project: default
+  project: vault
   sources:
     - repoURL: https://helm.releases.hashicorp.com
-      chart: vault-secrets-operator
-      targetRevision: 2.0.0
+      chart: vault
+      targetRevision: 0.34.1
       helm:
-        releaseName: vault-secrets-operator
         valueFiles:
           - $values/cluster/vault/values.yaml
     - repoURL: https://github.com/MaciejWojs/BuddyStream-IAC.git
@@ -21,11 +20,10 @@ spec:
       ref: values
   destination:
     server: https://kubernetes.default.svc
-    namespace: vault-secrets-operator
+    namespace: vault
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true
     retry:
       refresh: true
     automated:
