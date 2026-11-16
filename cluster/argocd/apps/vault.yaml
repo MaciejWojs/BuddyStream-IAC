@@ -6,7 +6,6 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "-15"
 spec:
-  project: vault
   sources:
     - repoURL: https://helm.releases.hashicorp.com
       chart: vault
