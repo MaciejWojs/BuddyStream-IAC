@@ -3,6 +3,19 @@ kind: ServiceAccount
 metadata:
   name: backend-sa
 ---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: backend
+spec:
+  method: kubernetes
+  mount: kubernetes
+  kubernetes:
+    role: backend
+    serviceAccount: backend-sa
+    audiences:
+      - vault
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,6 +48,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: backend-config
+            - secretRef:
+                name: backend-secrets
 ---
 apiVersion: v1
 kind: Service
@@ -52,16 +67,15 @@ apiVersion: secrets.hashicorp.com/v1beta1
 kind: VaultStaticSecret
 metadata:
   name: backend-secrets
-  namespace: default
 spec:
+  vaultAuthRef: backend
   type: kv-v2
   mount: secret
   path: backend
-
+  refreshAfter: 30s
   destination:
     name: backend-secrets
     create: true
-
-  refreshAfter: 30s
-
-  vaultAuthRef: default
+  rolloutRestartTargets:
+    - kind: Deployment
+      name: backend-deployment
