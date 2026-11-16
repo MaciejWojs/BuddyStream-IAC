@@ -1,6 +1,2 @@
-server:
-  dev:
-    enabled: true
-
-injector:
-  enabled: true
+controller:
+  replicas: 1
