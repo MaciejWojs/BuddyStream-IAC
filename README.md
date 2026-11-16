@@ -8,12 +8,12 @@ OpenTofu kończy się na klastrze. Nie tworzy Deploymentów, obrazów ani Argo C
 
 Przy `environment = local` i `enable_eks = true`:
 
-| Zasób | Nazwa | Po co |
-| --- | --- | --- |
-| Bucket S3 | `platforma-local` | Pliki. We Floci to lokalna atrapa. |
-| Rola IAM | `platforma-local-cluster` | Floci odrzuca `CreateCluster`, jeśli rola jeszcze nie istnieje. |
-| VPC i dwie podsieci | `10.0.0.0/16`, strefy `a` i `b` | Provider `aws_eks_cluster` wymaga podsieci. Sieć jest pusta. |
-| Klaster EKS | `platforma-local`, Kubernetes 1.31 | API na `https://localhost:<port>` (zakres 6500–6599). |
+| Zasób               | Nazwa                              | Po co                                                           |
+| ------------------- | ---------------------------------- | --------------------------------------------------------------- |
+| Bucket S3           | `platforma-local`                  | Pliki. We Floci to lokalna atrapa.                              |
+| Rola IAM            | `platforma-local-cluster`          | Floci odrzuca `CreateCluster`, jeśli rola jeszcze nie istnieje. |
+| VPC i dwie podsieci | `10.0.0.0/16`, strefy `a` i `b`    | Provider `aws_eks_cluster` wymaga podsieci. Sieć jest pusta.    |
+| Klaster EKS         | `platforma-local`, Kubernetes 1.31 | API na `https://localhost:<port>` (zakres 6500–6599).           |
 
 Na `dev` klaster jest wyłączony (`enable_eks = false`), żeby apply nie zakładał prawdziwego EKS w AWS.
 
