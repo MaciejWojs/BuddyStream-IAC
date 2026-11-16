@@ -47,3 +47,21 @@ spec:
     - protocol: TCP
       port: 3000
       targetPort: 3000
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultStaticSecret
+metadata:
+  name: backend-secrets
+  namespace: default
+spec:
+  type: kv-v2
+  mount: secret
+  path: backend
+
+  destination:
+    name: backend-secrets
+    create: true
+
+  refreshAfter: 30s
+
+  vaultAuthRef: default
