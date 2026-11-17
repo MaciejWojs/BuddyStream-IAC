@@ -70,3 +70,15 @@ variable "kubernetes_version" {
   type        = string
   default     = "1.31"
 }
+
+variable "enable_api_gateway" {
+  description = "Tworzy REST API Gateway i web ACL WAF. We Floci brama przekazuje ruch, a reguły WAF nie filtrują żądań."
+  type        = bool
+  default     = false
+}
+
+variable "api_gateway_backend_url" {
+  description = "Adres usługi aplikacyjnej dla integracji HTTP_PROXY. Wymagany, gdy enable_api_gateway = true. Z kontenera Floci host to zwykle http://host.docker.internal:3000."
+  type        = string
+  default     = null
+}

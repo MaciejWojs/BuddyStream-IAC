@@ -1,6 +1,6 @@
 # Infrastruktura
 
-OpenTofu stawia lokalnie bucket S3 i klaster EKS na [Floci](https://floci.io/). Floci udaje AWS na `http://localhost:4566`, a klaster EKS to kontener k3s.
+OpenTofu stawia lokalnie bucket S3, klaster EKS, REST API Gateway i web ACL WAF na [Floci](https://floci.io/). Floci udaje AWS na `http://localhost:4566`, a klaster EKS to kontener k3s.
 
 OpenTofu kończy się na klastrze. Nie tworzy Deploymentów, obrazów ani Argo CD. `tofu destroy` kasuje cały kontener k3s, więc wszystko, co zostało dołożone ręcznie albo przez GitOps, znika razem z nim.
 
@@ -14,8 +14,12 @@ Przy `environment = local` i `enable_eks = true`:
 | Rola IAM            | `platforma-local-cluster`          | Floci odrzuca `CreateCluster`, jeśli rola jeszcze nie istnieje. |
 | VPC i dwie podsieci | `10.0.0.0/16`, strefy `a` i `b`    | Provider `aws_eks_cluster` wymaga podsieci. Sieć jest pusta.    |
 | Klaster EKS         | `platforma-local`, Kubernetes 1.31 | API na `https://localhost:<port>` (zakres 6500–6599).           |
+| REST API Gateway    | `platforma-local`, stage `local`   | Krótkie żądania HTTP, integracja `HTTP_PROXY` do backendu.      |
+| Web ACL WAF         | `platforma-local`, zakres REGIONAL | Limit częstości i rozmiaru ciała. We Floci zapis konfiguracji.  |
 
-Na `dev` klaster jest wyłączony (`enable_eks = false`), żeby apply nie zakładał prawdziwego EKS w AWS.
+Na `dev` klaster i brama są wyłączone (`enable_eks = false`, `enable_api_gateway = false`), żeby apply nie zakładał prawdziwego EKS ani API Gateway w AWS.
+
+Floci przekazuje ruch przez `HTTP_PROXY` (nagłówki `Authorization`, `Cookie` i `Set-Cookie` dochodzą do usługi). Web ACL da się utworzyć i podpiąć do stage, ale Floci nie ocenia reguł na żywym ruchu: odpowiedź `WAF_FILTERED` tu nie występuje. Na AWS ten sam opis filtruje żądania. Adres lokalny jest w outputcie `api_gateway_local_url` i ma postać `http://localhost:4566/restapis/<id>/local/_user_request_/`. Backend z kontenera Floci nie jest na `localhost` hosta; w pliku local jest `http://host.docker.internal:3000`.
 
 ## Narzędzia
 
@@ -50,8 +54,10 @@ s3_use_path_style  = true
 skip_aws_checks    = true
 aws_access_key     = "test"
 aws_secret_key     = "test"
-enable_eks         = true
-kubernetes_version = "1.31"
+enable_eks              = true
+kubernetes_version      = "1.31"
+enable_api_gateway      = true
+api_gateway_backend_url = "http://host.docker.internal:3000"
 ```
 
 `test` / `test` to publiczna para Floci do wywołań API (S3, IAM, EKS). Nie nadaje się do `kubectl`. Webhook klastra odrzuca ją, bo dostałaby uprawnienie `cluster-admin`.

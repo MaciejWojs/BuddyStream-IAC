@@ -23,6 +23,27 @@ output "cluster_endpoint" {
   value       = one(module.eks[*].cluster_endpoint)
 }
 
+output "api_gateway_invoke_url" {
+  description = "Adres stage API Gateway."
+  value       = one(module.api_gateway[*].invoke_url)
+}
+
+output "api_gateway_local_url" {
+  description = "Wywołanie REST API przez ścieżkę Floci. Null poza lokalnym endpointem."
+  value = var.enable_api_gateway && var.aws_s3_endpoint != null ? join("/", [
+    trimsuffix(var.aws_s3_endpoint, "/"),
+    "restapis",
+    one(module.api_gateway[*].rest_api_id),
+    one(module.api_gateway[*].stage_name),
+    "_user_request_",
+  ]) : null
+}
+
+output "web_acl_arn" {
+  description = "ARN web ACL podpiętego do stage. Null, gdy brama jest wyłączona."
+  value       = one(module.api_gateway[*].web_acl_arn)
+}
+
 output "update_kubeconfig" {
   description = "Podpina kubectl. We Floci klucz test/test nie przejdzie webhooka klastra."
   value = var.enable_eks ? join(" ", compact([
