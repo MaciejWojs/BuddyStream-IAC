@@ -19,7 +19,7 @@ Przy `environment = local` i `enable_eks = true`:
 
 Na `dev` klaster i brama są wyłączone (`enable_eks = false`, `enable_api_gateway = false`), żeby apply nie zakładał prawdziwego EKS ani API Gateway w AWS.
 
-Floci przekazuje ruch przez `HTTP_PROXY` (nagłówki `Authorization`, `Cookie` i `Set-Cookie` dochodzą do usługi). Web ACL da się utworzyć i podpiąć do stage, ale Floci nie ocenia reguł na żywym ruchu: odpowiedź `WAF_FILTERED` tu nie występuje. Na AWS ten sam opis filtruje żądania. Adres lokalny jest w outputcie `api_gateway_local_url` i ma postać `http://localhost:4566/restapis/<id>/local/_user_request_/`. Backend z kontenera Floci nie jest na `localhost` hosta; w pliku local jest `http://host.docker.internal:3000`.
+Floci przekazuje ruch przez `HTTP_PROXY` (nagłówki `Authorization`, `Cookie` i `Set-Cookie` dochodzą do usługi). Web ACL da się utworzyć i podpiąć do stage, ale Floci nie ocenia reguł na żywym ruchu: odpowiedź `WAF_FILTERED` tu nie występuje. Na AWS ten sam opis filtruje żądania. Krótki adres jest w outputcie `api_gateway_domain_url`: `http://api.localhost.floci.io:4566`. Domena jest zmapowana na stage `local`, więc ścieżka to od razu `/api/v1/...`. Bez tej domeny zostaje `api_gateway_local_url` (`http://localhost:4566/restapis/<id>/local/_user_request_/`). Backend z kontenera Floci nie jest na `localhost` hosta; w pliku local jest `http://host.docker.internal:3000`.
 
 ## Narzędzia
 
@@ -56,8 +56,10 @@ aws_access_key     = "test"
 aws_secret_key     = "test"
 enable_eks              = true
 kubernetes_version      = "1.31"
-enable_api_gateway      = true
-api_gateway_backend_url = "http://host.docker.internal:3000"
+enable_api_gateway          = true
+api_gateway_backend_url     = "http://host.docker.internal:3000"
+api_gateway_domain_name     = "api.localhost.floci.io"
+api_gateway_certificate_arn = "arn:aws:acm:eu-central-1:000000000000:certificate/local"
 ```
 
 `test` / `test` to publiczna para Floci do wywołań API (S3, IAM, EKS). Nie nadaje się do `kubectl`. Webhook klastra odrzuca ją, bo dostałaby uprawnienie `cluster-admin`.

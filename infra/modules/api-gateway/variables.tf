@@ -39,3 +39,15 @@ variable "environment" {
   description = "Tag środowiska."
   type        = string
 }
+
+variable "domain_name" {
+  description = "Własna domena bramy, np. api.localhost.floci.io. Puste = tylko adres execute-api."
+  type        = string
+  default     = null
+}
+
+variable "regional_certificate_arn" {
+  description = "ARN certyfikatu regionalnego. We Floci składnia wystarczy, na AWS to certyfikat ACM z tego regionu."
+  type        = string
+  default     = null
+}

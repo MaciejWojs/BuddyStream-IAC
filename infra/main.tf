@@ -33,9 +33,11 @@ module "api_gateway" {
   count  = var.enable_api_gateway ? 1 : 0
   source = "./modules/api-gateway"
 
-  name             = "${var.project}-${var.environment}"
-  stage_name       = var.environment
-  backend_base_url = var.enable_api_gateway ? var.api_gateway_backend_url : "http://127.0.0.1"
-  project          = var.project
-  environment      = var.environment
+  name                     = "${var.project}-${var.environment}"
+  stage_name               = var.environment
+  backend_base_url         = var.enable_api_gateway ? var.api_gateway_backend_url : "http://127.0.0.1"
+  domain_name              = var.api_gateway_domain_name
+  regional_certificate_arn = var.api_gateway_certificate_arn
+  project                  = var.project
+  environment              = var.environment
 }

@@ -39,6 +39,13 @@ output "api_gateway_local_url" {
   ]) : null
 }
 
+output "api_gateway_domain_url" {
+  description = "Krótki adres bramy. Na local port Floci, poza nim HTTPS. Null bez domeny."
+  value = var.enable_api_gateway && var.api_gateway_domain_name != null ? (
+    var.aws_s3_endpoint != null ? "http://${var.api_gateway_domain_name}:4566" : "https://${var.api_gateway_domain_name}"
+  ) : null
+}
+
 output "web_acl_arn" {
   description = "ARN web ACL podpiętego do stage. Null, gdy brama jest wyłączona."
   value       = one(module.api_gateway[*].web_acl_arn)

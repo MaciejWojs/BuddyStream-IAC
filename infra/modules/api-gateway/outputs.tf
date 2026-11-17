@@ -22,3 +22,8 @@ output "web_acl_arn" {
   description = "ARN web ACL podpiętego do stage."
   value       = aws_wafv2_web_acl.this.arn
 }
+
+output "domain_name" {
+  description = "Własna domena bramy. Null, gdy nie ustawiono."
+  value       = one(aws_api_gateway_domain_name.this[*].domain_name)
+}

@@ -82,3 +82,15 @@ variable "api_gateway_backend_url" {
   type        = string
   default     = null
 }
+
+variable "api_gateway_domain_name" {
+  description = "Własna domena bramy. Na local: api.localhost.floci.io. Puste = bez mapowania."
+  type        = string
+  default     = null
+}
+
+variable "api_gateway_certificate_arn" {
+  description = "ARN certyfikatu regionalnego domeny. We Floci atrapa, na AWS certyfikat ACM."
+  type        = string
+  default     = null
+}

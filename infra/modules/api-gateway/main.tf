@@ -272,3 +272,31 @@ resource "aws_wafv2_web_acl_association" "this" {
   resource_arn = aws_api_gateway_stage.this.arn
   web_acl_arn  = aws_wafv2_web_acl.this.arn
 }
+
+resource "aws_api_gateway_domain_name" "this" {
+  count = var.domain_name == null ? 0 : 1
+
+  domain_name              = var.domain_name
+  regional_certificate_arn = var.regional_certificate_arn
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
+
+  tags = local.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.regional_certificate_arn != null
+      error_message = "regional_certificate_arn jest wymagany, gdy domain_name jest ustawione."
+    }
+  }
+}
+
+resource "aws_api_gateway_base_path_mapping" "this" {
+  count = var.domain_name == null ? 0 : 1
+
+  domain_name = aws_api_gateway_domain_name.this[0].domain_name
+  api_id      = aws_api_gateway_rest_api.this.id
+  stage_name  = aws_api_gateway_stage.this.stage_name
+}
