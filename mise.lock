@@ -67,11 +67,14 @@ url = "https://github.com/argoproj/argo-cd/releases/download/v3.6.2/argocd-cli.i
 version = "2.42.1"
 backend = "aqua:aws/aws-cli"
 specifiers = ["2.42.1"]
+unsupported_platforms = ["windows-x64"]
 
 [tools.aws."platforms.linux-arm64"]
+checksum = "sha256:98f5f03bb6508a06ce9d9d6d2db97932dce735f3b7ad85616324a95edf4b815f"
 url = "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-2.42.1.zip"
 
 [tools.aws."platforms.linux-arm64-musl"]
+checksum = "sha256:98f5f03bb6508a06ce9d9d6d2db97932dce735f3b7ad85616324a95edf4b815f"
 url = "https://awscli.amazonaws.com/awscli-exe-linux-aarch64-2.42.1.zip"
 
 [tools.aws."platforms.linux-x64"]
@@ -79,12 +82,15 @@ checksum = "blake3:6f8b61c3fbdbad0f16f065c72b244b6376ef4e939197f0130bbfb9bf3a372
 url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.42.1.zip"
 
 [tools.aws."platforms.linux-x64-musl"]
+checksum = "sha256:ff2631c32c5db291b099600f404bc493454ec66c125ff4604625da90480c1f47"
 url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.42.1.zip"
 
 [tools.aws."platforms.macos-arm64"]
+checksum = "sha256:74e38ab8a592b635d7b0ae85e6f33cb1ceba79ce19c112d425cbbf535e607b23"
 url = "https://awscli.amazonaws.com/AWSCLIV2-2.42.1.pkg"
 
 [tools.aws."platforms.macos-x64"]
+checksum = "sha256:74e38ab8a592b635d7b0ae85e6f33cb1ceba79ce19c112d425cbbf535e607b23"
 url = "https://awscli.amazonaws.com/AWSCLIV2-2.42.1.pkg"
 
 [[tools.kubectl]]
