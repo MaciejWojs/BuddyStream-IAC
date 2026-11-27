@@ -128,7 +128,7 @@ Manifesty aplikacji trzymaj w gicie (katalog `cluster/`). Argo CD synchronizuje 
 
 Serwer Vault stoi w trybie dev: token roota to `root`, a KV v2 jest pod montowaniem `secret/`. Ten stan jest w pamięci poda `vault-0`. Restart poda albo `tofu destroy` kasuje metodę logowania, politykę i wpisany sekret. Komendy poniżej trzeba wtedy powtórzyć. Binding `vault-token-reviewer` zostaje, dopóki żyje klaster. Przy drugim `kubectl create` wystarczy komunikat, że binding już istnieje. `vault auth enable` przy istniejącej ścieżce `kubernetes` też można zignorować.
 
-Operator czyta `secret/data/backend` rolą `backend`. Rola dopuszcza konto `backend-sa` z namespace `backend` i audience `vault`. Te wartości są w `cluster/backend/backend.yaml`. Bez TokenReview logowanie kończy się 403, operator nie tworzy Secret `backend-secrets`, a Deployment nie startuje.
+Operator czyta `secret/data/backend` rolą `backend`. Rola dopuszcza konto `backend-sa` z namespace `main` i audience `vault`. Te wartości są w `cluster/backend/backend.yaml`. Bez TokenReview logowanie kończy się 403, operator nie tworzy Secret `backend-secrets`, a Deployment nie startuje.
 
 ```bash
 kubectl create clusterrolebinding vault-token-reviewer \
@@ -151,7 +151,7 @@ vault write auth/kubernetes/config \
   kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 vault write auth/kubernetes/role/backend \
   bound_service_account_names=backend-sa \
-  bound_service_account_namespaces=backend \
+  bound_service_account_namespaces=main \
   bound_audiences=vault \
   policies=backend \
   ttl=1h

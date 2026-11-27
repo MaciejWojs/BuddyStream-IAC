@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
-  project: default
+  project: main
   source:
     repoURL: https://github.com/MaciejWojs/BuddyStream-IAC.git
     targetRevision: HEAD
@@ -15,7 +15,7 @@ spec:
       recurse: true
   destination:
     server: https://kubernetes.default.svc
-    namespace: backend
+    namespace: main
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
