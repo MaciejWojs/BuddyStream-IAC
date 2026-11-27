@@ -118,7 +118,8 @@ kubectl port-forward -n argocd svc/argocd-server 8080:80
 UI: [http://localhost:8080](http://localhost:8080). Login to `admin`. Hasło:
 
 ```bash
-kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+mkdir -p tmp/
+kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d | tee tmp/argocd.txt
 ```
 
 Manifesty aplikacji trzymaj w gicie (katalog `cluster/`). Argo CD synchronizuje je do klastra. Zmiana obrazu to commit, nie `tofu apply`.
