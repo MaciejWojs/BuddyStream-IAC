@@ -9,6 +9,7 @@ spec:
   description: Shared platform services (Vault, CloudNativePG clusters)
   sourceRepos:
     - https://github.com/MaciejWojs/BuddyStream-IAC.git
+    - https://helm.releases.hashicorp.com
   destinations:
     - namespace: vault
       server: https://kubernetes.default.svc
