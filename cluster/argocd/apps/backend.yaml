@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/MaciejWojs/BuddyStream-IAC.git
     targetRevision: HEAD
-    path: cluster/backend
+    path: cluster/apps/backend
     directory:
       recurse: true
   destination:
