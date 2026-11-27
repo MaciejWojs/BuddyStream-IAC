@@ -1,17 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: vault-secrets-operator
+  name: platform
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-30"
 spec:
-  description: Vault Secrets Operator syncing secrets from the in-cluster Vault
+  description: Shared platform services (Vault, CloudNativePG clusters)
   sourceRepos:
     - https://github.com/MaciejWojs/BuddyStream-IAC.git
-    - https://helm.releases.hashicorp.com
   destinations:
-    - namespace: vault-secrets-operator
+    - namespace: vault
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: "*"
