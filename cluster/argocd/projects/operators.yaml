@@ -10,7 +10,7 @@ spec:
   sourceRepos:
     - https://github.com/MaciejWojs/BuddyStream-IAC.git
     - https://helm.releases.hashicorp.com
-    - https://cloudnative-pg.github.io/
+    - https://cloudnative-pg.github.io/charts
   destinations:
     - namespace: operators
       server: https://kubernetes.default.svc
