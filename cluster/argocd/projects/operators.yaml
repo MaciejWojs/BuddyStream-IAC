@@ -11,6 +11,8 @@ spec:
     - https://github.com/MaciejWojs/BuddyStream-IAC.git
     - https://helm.releases.hashicorp.com
     - https://cloudnative-pg.github.io/charts
+    - https://github.com/rancher/local-path-provisioner.git
+    - https://kubernetes-sigs.github.io/aws-ebs-csi-driver
   destinations:
     - namespace: operators
       server: https://kubernetes.default.svc
