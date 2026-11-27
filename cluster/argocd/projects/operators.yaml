@@ -11,7 +11,7 @@ spec:
     - https://github.com/MaciejWojs/BuddyStream-IAC.git
     - https://helm.releases.hashicorp.com
   destinations:
-    - namespace: vault-secrets-operator
+    - namespace: operators
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: "*"
